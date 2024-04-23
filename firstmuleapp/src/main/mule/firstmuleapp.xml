@@ -10,18 +10,9 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="1d4ab7e3-dbb8-4320-b13d-21e6d7cf46f1" >
 		<http:request-connection protocol="HTTPS" host="rickandmortyapi.com" />
 	</http:request-config>
-	<flow name="SchedulerFlow" doc:id="83c37455-a33f-468d-8c3e-9f259ac1d6d4" >
-		<scheduler doc:name="Scheduler" doc:id="24645570-a679-4cbb-8029-79f009cfb096" >
-			<scheduling-strategy >
-				<fixed-frequency frequency="10" timeUnit="SECONDS"/>
-			</scheduling-strategy>
-		</scheduler>
-		<logger level="INFO" doc:name="Logger" doc:id="d9c65009-4e0b-4fdf-98ee-e988f840c4a8" message="This is my first mule application"/>
-		<logger level="INFO" doc:name="Logger" doc:id="f8f67e20-77eb-41b5-91c5-92b3a2bebb29" message="Added another processor"/>
-	</flow>
 	<flow name="HttpFlow" doc:id="4b25e901-a06e-40ad-9a10-27abfb272d93" >
 		<http:listener doc:name="Listener" doc:id="faf7acc7-475d-4e7e-9d27-5eb1f770033b" config-ref="HTTP_Listener_config" path="/log"/>
 		<http:request method="GET" doc:name="Request" doc:id="d1ba40ec-9ff5-4569-bed0-499ce7d0b7a0" config-ref="HTTP_Request_configuration" path="/api/character/108"/>
-		<logger level="INFO" doc:name="Logger" doc:id="31036faa-e096-4c8b-b7e9-73056792a25b"/>
+		<logger level="INFO" doc:name="Logger" doc:id="31036faa-e096-4c8b-b7e9-73056792a25b" message="#[payload.name ++ ' ' ++ upper(payload.status)]"/>
 	</flow>
 </mule>
