@@ -12,10 +12,13 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 	</http:request-config>
 	<flow name="HttpFlow" doc:id="4b25e901-a06e-40ad-9a10-27abfb272d93" >
 		<http:listener doc:name="Listener" doc:id="faf7acc7-475d-4e7e-9d27-5eb1f770033b" config-ref="HTTP_Listener_config" path="/log"/>
-		<flow-ref doc:name="Flow Reference" doc:id="5fdb5396-c551-403f-bd80-8f641e17f083" name="firstmuleappSub_Flow"/>
+		<flow-ref doc:name="Flow Reference" doc:id="5fdb5396-c551-403f-bd80-8f641e17f083" name="firstmuleapppPrivate_Flow"/>
 		<logger level="INFO" doc:name="Logger" doc:id="31036faa-e096-4c8b-b7e9-73056792a25b" message='#[vars.name]'/>
 	</flow>
 	<sub-flow name="firstmuleappSub_Flow" doc:id="d4bdd469-86ac-471c-9140-d0976cd7d86b" >
 		<set-variable value='#[attributes.queryParams.name default "Jane"]' doc:name="Set Variable" doc:id="fce60dfd-cddd-4f1a-9bf0-574685f558c9" variableName="name" mimeType="text/plain" />
 	</sub-flow>
+	<flow name="firstmuleapppPrivate_Flow" doc:id="b4c52382-0657-4bd6-a717-8c9320864332" >
+		<set-variable value="#[upper(attributes.queryParams.name)]" doc:name="Set Variable" doc:id="e90237de-da7f-4859-a807-8d4cb614b7cf" variableName="name"/>
+	</flow>
 </mule>
