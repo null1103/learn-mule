@@ -1,4 +1,21 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
-  <types:catalog/>
+  <types:catalog>
+    <types:type name="testtype" format="json">
+      <types:shape format="weave" example="examples/muletest.json"><![CDATA[%dw 2.0
+
+type testtype = Array<{|  name: String,   lastname: String|}> {"example": "[{\\\"name\\\":\\\"Jane\\\",\\\"lastname\\\":\\\"Doe\\\"}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#bd11b380-f479-4f64-b9b3-6cd4899fbf73">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="testtype"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
 </types:mule>
