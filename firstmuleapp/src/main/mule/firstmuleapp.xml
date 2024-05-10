@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="db0e474b-6e93-418c-99c2-d65b8ac71bd8" >
 		<http:listener-connection host="0.0.0.0" port="8081" />
 	</http:listener-config>
 	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="1d4ab7e3-dbb8-4320-b13d-21e6d7cf46f1" >
 		<http:request-connection protocol="HTTPS" host="rickandmortyapi.com" />
 	</http:request-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="7a80d6af-7a44-43e2-8176-d1f61729c015" >
+		<db:my-sql-connection host="localhost" port="3306" user="dev" password="Dev12345678!" database="mule_schema"/>
+	</db:config>
 	<flow name="HttpFlow" doc:id="4b25e901-a06e-40ad-9a10-27abfb272d93" >
 		<http:listener doc:name="Listener" doc:id="faf7acc7-475d-4e7e-9d27-5eb1f770033b" config-ref="HTTP_Listener_config" path="/log"/>
 		<flow-ref doc:name="Flow Reference" doc:id="5fdb5396-c551-403f-bd80-8f641e17f083" name="firstmuleapppPrivate_Flow" target="name"/>
@@ -23,4 +28,19 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 		<set-payload value="#[attributes.queryParams.name]" doc:name="Set Payload" doc:id="84b5d740-ee8d-4749-8519-a111e2f6aa1e" />
 	
 </flow>
+	<flow name="DBFlow" doc:id="1f580cbb-79c9-4808-8e58-6fe9bbea429c" >
+		<http:listener doc:name="Listener" doc:id="488e9eb9-b7b9-499f-8ed2-612800b65754" config-ref="HTTP_Listener_config" path="/db"/>
+		<db:select doc:name="Select" doc:id="44d9c466-8c23-416d-bb83-b4bbf81ba03d" config-ref="Database_Config">
+			<db:sql ><![CDATA[select * from muletest]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="bd11b380-f479-4f64-b9b3-6cd4899fbf73" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+
 </mule>
