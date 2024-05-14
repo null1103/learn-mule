@@ -46,5 +46,16 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 			</ee:message>
 		</ee:transform>
 	</flow>
+	<flow name="insertFlow" doc:id="5ea0264d-4f4e-4f20-9a2b-c6ef9222319f" >
+		<http:listener doc:name="Listener" doc:id="2316dcd0-cf9d-43f5-b5a5-22278cef37be" config-ref="HTTP_Listener_config" path="/dbinsert"/>
+		<db:insert doc:name="Insert" doc:id="99e094f7-95c9-480d-9bc3-0941690c8886" config-ref="Database_Config">
+			<db:sql ><![CDATA[insert into muletest values (4,:name, :lastname)]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	name: payload.name,
+	lastname: payload.lastname
+}]]]></db:input-parameters>
+		</db:insert>
+		<set-payload value="Record created" doc:name="Set Payload" doc:id="8ad8b97d-1559-4941-903d-37e38d43c59f" />
+	</flow>
 
 </mule>
